@@ -1,118 +1,141 @@
-# Fitoo!! (Android)
+# Fitoo!!
 
-Fitoo!! is an Android fitness tracker that combines **meal logging**, **workout tracking**, and an in-app AI coach (**Sensei**) to help you stay consistent.
+**Fitoo!!** is an Android fitness app for logging **meals**, tracking **workouts**, and chatting with an in-app AI coach (**Sensei**). Data stays on your device.
 
-## Features
+| | |
+|---|---|
+| **Version** | `1.0` (`versionCode` 1) |
+| **Min Android** | 8.0 (API 26) |
+| **Package** | `com.example.fitoo` |
 
-- **Home dashboard**
-  - Today’s consumed calories + macros (protein/carbs/fats/fiber)
-  - Rolling totals for week / month / 3 months
-  - “Today’s workout plan” progress
-- **Meals**
-  - Add foods with quantity in **count** or **grams**
-  - Auto macro estimates for common foods + **fiber**
-  - **Online nutrition lookup** for unknown foods (grams mode) + caching for faster results
-  - Manual macro override (always supported)
-  - Mark foods as eaten, edit, delete
-  - Simple **diet plan** you can apply to “today”
-- **Workouts**
-  - Daily workout log with completion tracking
-  - Built-in exercise catalog + add custom exercises
-  - **Hide/remove built-in exercises** (restore defaults anytime)
-  - Manage workout categories (reassign on delete)
-  - Recent day history
-- **Profile**
-  - Save profile + goals (target calories / protein)
-  - Pick and crop a profile photo (saved to internal storage)
-  - “Delete all data” reset
-- **Sensei (AI coach)**
-  - Chat about training / nutrition inside the app
-  - Works **with an OpenAI API key** or in **no-key mode** (uses a third-party text endpoint)
-  - Multiple saved chat sessions (history)
-  - Action buttons to apply changes (diet/workout) + **Undo**
+---
 
-## Tech stack
+## Quick start
 
-- **Android**: AppCompat + Fragments + Material UI
-- **Language**: Java
-- **Persistence**: Room (SQLite)
-- **Networking**: `HttpURLConnection` (JSON over HTTP)
-- **Performance**: shared background executor (`AppExecutors`) to keep UI responsive
+1. Clone or open this folder in **Android Studio**.
+2. Use **JDK 17** (required by the Android Gradle Plugin).
+3. **Run** the `app` configuration on a device or emulator, **or** build an APK (see below).
 
-## Requirements
+---
 
-- Android Studio (recommended)
-- JDK **17** (Android Gradle Plugin requires Java 17 to run)
-- Android SDK installed (project targets `compileSdk = 36`, `minSdk = 26`)
+## Build & install the APK
 
-## Run the app
+There is no pre-built APK in the repo—you generate it on your machine.
 
-1. Open the project root folder in Android Studio.
-2. Let Gradle sync finish.
-3. Select the `app` run configuration.
-4. Run on an emulator or a device (Android 8.0 / API 26+).
+### Option A — Android Studio (easiest)
 
-## AI configuration (optional)
+1. **Build → Build Bundle(s) / APK(s) → Build APK(s)**.
+2. When finished, click **locate** in the notification, or open:
+   - **Debug:** `app/build/outputs/apk/debug/app-debug.apk`
+   - **Release:** `app/build/outputs/apk/release/app-release.apk` (unsigned unless you configure signing)
 
-Sensei supports two modes:
+### Option B — Command line
 
-### 1) With OpenAI API key (recommended for reliability)
-
-The app stores the API key in Android `SharedPreferences` under `fitoo_prefs`.
-
-- **Prefs name**: `fitoo_prefs`
-- **Key**: `openai_api_key`
-- **Model key**: `openai_model` (default: `gpt-4.1-mini`)
-
-If you don’t set a key, Sensei automatically falls back to “no-key” mode.
-
-### 2) No-key mode (fallback)
-
-Uses a public text endpoint and a selectable “no-key model”.
-
-- **Pref key**: `no_key_model` (default: `openai-fast`)
-
-Note: Availability and model list depend on the external provider.
-
-## Data storage
-
-All app data is stored locally:
-
-- **Room database**: `fitoo.db`
-- **Preferences**: `fitoo_prefs` (AI settings + Sensei chat sessions)
-- **Preferences**: `fitoo_workout_prefs` (workout categories + hidden default exercises)
-- **Profile avatar**: internal file `profile_avatar.png`
-
-## Project structure
-
-- `app/src/main/java/com/example/fitoo/`
-  - `MainActivity` (bottom navigation host)
-  - `HomeFragment`, `MealsFragment`, `WorkoutsFragment`, `SenseiFragment`, `ProfileFragment`
-  - Room: `FitooDatabase` + entities/DAOs
-  - AI: `OpenAiClient`, `FreeAiClient`, `AiPreferences`
-- `app/src/main/res/` (layouts, drawables, strings, etc.)
-
-## Documentation
-
-- `docs/SETUP.md` — setup, build, and configuration
-- `docs/FEATURES.md` — user-facing feature walkthrough
-- `docs/ARCHITECTURE.md` — high-level architecture and module map
-- `docs/DATA_MODEL.md` — Room entities and stored data
-- `docs/TROUBLESHOOTING.md` — common issues and fixes
-
-## Versioning / “v1 APK”
-
-This snapshot is **Version 1**:
-
-- `versionCode = 1`
-- `versionName = "1.0"`
-
-To generate APKs (requires Java 17):
+From the project root:
 
 ```bash
+cd /path/to/Fitoo
 ./gradlew :app:assembleDebug
+```
+
+Debug APK output:
+
+```
+app/build/outputs/apk/debug/app-debug.apk
+```
+
+For a release build (configure signing in Android Studio first):
+
+```bash
 ./gradlew :app:assembleRelease
 ```
 
-APKs will be created under `app/build/outputs/apk/`.
+**Requirements:** JDK **17**, Android SDK (via Android Studio or `ANDROID_HOME`).
 
+### Install on a phone
+
+- Copy `app-debug.apk` to the device and open it (install unknown sources if prompted), **or**
+- `adb install -r app/build/outputs/apk/debug/app-debug.apk`
+
+---
+
+## Features (summary)
+
+| Area | What you get |
+|------|----------------|
+| **Home** | Daily calories, macros (protein / carbs / fats / **fiber**), rolling calorie totals, today’s workout progress |
+| **Meals** | Add food by **count** or **grams;** local estimates + **online lookup** for unknown foods (grams); diet plan; apply plan to today |
+| **Workouts** | Today’s log, built-in + custom exercises, **hide** built-in items, categories, history |
+| **Sensei** | AI chat (OpenAI key **or** no-key mode); actions to apply diet/workout changes + **Undo** |
+| **Profile** | Goals, photo, wipe all data |
+
+Details: [`docs/FEATURES.md`](docs/FEATURES.md).
+
+---
+
+## Tech stack
+
+- **UI:** AppCompat, Fragments, Material 3
+- **Language:** Java
+- **Storage:** Room (SQLite)
+- **Network:** `HttpURLConnection` (AI + Open Food Facts lookup)
+- **Threading:** `AppExecutors` for smoother UI
+
+---
+
+## Sensei (optional)
+
+| Mode | How |
+|------|-----|
+| **OpenAI** | Set prefs in `fitoo_prefs`: `openai_api_key`, optional `openai_model` (default `gpt-4.1-mini`) |
+| **No-key** | If no key, uses external text API; model `no_key_model` (default `openai-fast`) |
+
+See [`docs/SETUP.md`](docs/SETUP.md).
+
+---
+
+## Data on device
+
+| Data | Location |
+|------|-----------|
+| Database | `fitoo.db` (Room) |
+| AI + Sensei chats | `fitoo_prefs` |
+| Workout prefs | `fitoo_workout_prefs` |
+| Profile image | `profile_avatar.png` (app storage) |
+
+---
+
+## Project layout
+
+```
+app/src/main/java/com/example/fitoo/   # App code
+app/src/main/res/                      # Layouts, drawables, strings
+docs/                                  # Extra documentation
+```
+
+---
+
+## Documentation
+
+| File | Description |
+|------|-------------|
+| [`docs/SETUP.md`](docs/SETUP.md) | Build, SDK, AI prefs |
+| [`docs/FEATURES.md`](docs/FEATURES.md) | Feature walkthrough |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Structure & layers |
+| [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md) | Room entities |
+| [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) | Gradle, Java 17, Sensei |
+
+---
+
+## Troubleshooting (short)
+
+- **Gradle wants Java 17:** install JDK 17 and point Android Studio / `JAVA_HOME` to it.
+- **No APK file:** run **Build APK** or `./gradlew :app:assembleDebug` and use the path under `app/build/outputs/apk/`.
+
+More: [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md).
+
+---
+
+## License
+
+Add your license here if you want this project to be open source.
