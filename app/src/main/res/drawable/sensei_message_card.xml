@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="16dp" />
+    <!-- More opaque than profile_stat_card for readability over busy background -->
+    <solid android:color="#D9000000" />
+    <stroke android:width="1dp" android:color="#33FFFFFF" />
+</shape>
+

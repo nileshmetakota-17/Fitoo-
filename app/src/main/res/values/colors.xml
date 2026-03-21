@@ -1,0 +1,19 @@
+<resources>
+
+    <color name="naruto_orange">#FF6A00</color>
+    <color name="chakra_blue">#00E5FF</color>
+    <color name="dark_bg">#0A0A0A</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Global readable text palette -->
+    <color name="text_primary">#F5F5F5</color>
+    <color name="text_secondary">#D1D1D1</color>
+    <color name="text_hint">#99FFFFFF</color>
+    <color name="text_disabled">#66FFFFFF</color>
+
+    <!-- Surface/on-surface for cards over busy backgrounds -->
+    <color name="surface">#121212</color>
+    <color name="on_surface">#F5F5F5</color>
+    <color name="on_surface_variant">#D1D1D1</color>
+
+</resources>

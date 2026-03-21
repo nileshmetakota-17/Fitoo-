@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Anime video / background layer -->
+
+    <VideoView
+        android:id="@+id/videoBG"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Dim overlay so UI is readable on top of video -->
+
+    <View
+        android:id="@+id/videoScrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#73000000" />
+
+    <!-- Main content with bottom navigation -->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Hero header -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="158dp"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <ImageView
+                android:id="@+id/rasengan"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/rasengan" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fitoo: Anime Training Arc"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/subtitleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Level up your stats"
+                    android:textColor="#CCFFFFFF"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Fragment container -->
+
+        <FrameLayout
+            android:id="@+id/nav_host_container"
+            android:layout_width="match_parent"
+            android:layout_height="510dp"
+            android:layout_weight="1" />
+
+        <!-- Bottom navigation bar -->
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#CC000000"
+            app:itemBackground="@android:color/transparent"
+            app:itemIconSize="24dp"
+            app:itemIconTint="@color/bottom_nav_item_color"
+            app:itemTextColor="@color/bottom_nav_item_color"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/bottom_nav_menu" />
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Fitoo!!</string>
+
+    <string-array name="meal_unit">
+        <item>Count / pieces (e.g. 6 eggs)</item>
+        <item>Weight in grams (e.g. 250 g)</item>
+    </string-array>
+    <string-array name="meal_categories">
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Snacks</item>
+        <item>Dinner</item>
+    </string-array>
+
+    <string-array name="meal_sort_options">
+        <item>By time</item>
+        <item>By calories</item>
+        <item>By category</item>
+    </string-array>
+
+    <string-array name="fitness_goals">
+        <item>Weight Loss</item>
+        <item>Muscle Gain</item>
+        <item>Maintain</item>
+    </string-array>
+    <string-array name="genders">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="muscle_groups">
+        <item>Chest</item>
+        <item>Back</item>
+        <item>Triceps</item>
+        <item>Biceps</item>
+        <item>Legs</item>
+        <item>Shoulders</item>
+    </string-array>
+
+</resources>
