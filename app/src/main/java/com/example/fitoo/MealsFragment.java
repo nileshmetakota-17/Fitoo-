@@ -1,10 +1,12 @@
 package com.example.fitoo;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
@@ -118,6 +121,29 @@ public class MealsFragment extends Fragment {
 
     private static final String UNKNOWN_FOOD_MSG = "Food not recognized. Try grams unit for online lookup, or enter macros manually.";
 
+    /**
+     * Caps the form {@link R.id#dialog_meal_scroll} height so the body scrolls; resizes with the IME so Add/Cancel stay reachable.
+     */
+    private void attachMealDialogKeyboardAndScroll(AlertDialog dialog, View dialogRoot) {
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        }
+        View scroll = dialogRoot.findViewById(R.id.dialog_meal_scroll);
+        if (scroll == null) {
+            return;
+        }
+        scroll.post(() -> {
+            ViewGroup.LayoutParams lp = scroll.getLayoutParams();
+            if (lp == null) {
+                return;
+            }
+            android.util.DisplayMetrics dm = requireContext().getResources().getDisplayMetrics();
+            int maxH = (int) (dm.heightPixels * 0.42f);
+            lp.height = maxH;
+            scroll.setLayoutParams(lp);
+        });
+    }
+
     private void showAddOrEditMealDialog(MealEntry existing) {
         View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_meal, null);
         EditText inputName = dialogView.findViewById(R.id.dialog_meal_name);
@@ -168,6 +194,7 @@ public class MealsFragment extends Fragment {
                 .create();
 
         dialog.setOnShowListener(d -> {
+            attachMealDialogKeyboardAndScroll(dialog, dialogView);
             activeMealDialog = dialog;
             Button positive = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             Button negative = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
@@ -233,11 +260,12 @@ public class MealsFragment extends Fragment {
                     setMealUiBusy(true);
                     Toast.makeText(getContext(), "Searching nutrition online...", Toast.LENGTH_SHORT).show();
                     float grams = qty;
+                    Context appCtx = requireContext().getApplicationContext();
                     AppExecutors.get().io().execute(() -> {
                         NutritionLookup.MacroInfo fetched = null;
                         String error = null;
                         try {
-                            fetched = OnlineNutritionLookup.lookupPerGrams(name, grams);
+                            fetched = OnlineNutritionLookup.lookupPerGrams(appCtx, name, grams);
                         } catch (Exception e) {
                             error = e.getMessage();
                         }
@@ -414,7 +442,7 @@ public class MealsFragment extends Fragment {
                     TextView label = new TextView(requireContext());
                     label.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
                     label.setText(item.name + " — " + Math.round(item.calories) + " kcal");
-                    label.setTextColor(0xFFFFFFFF);
+                    label.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary));
 
                     Button removeBtn = new Button(requireContext());
                     removeBtn.setText("Remove");
@@ -481,6 +509,7 @@ public class MealsFragment extends Fragment {
                 .create();
 
         dialog.setOnShowListener(d -> {
+            attachMealDialogKeyboardAndScroll(dialog, dialogView);
             activeMealDialog = dialog;
             Button positive = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             Button negative = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
@@ -545,11 +574,12 @@ public class MealsFragment extends Fragment {
                     setMealUiBusy(true);
                     Toast.makeText(getContext(), "Searching nutrition online...", Toast.LENGTH_SHORT).show();
                     float grams = qty;
+                    Context appCtx = requireContext().getApplicationContext();
                     AppExecutors.get().io().execute(() -> {
                         NutritionLookup.MacroInfo fetched = null;
                         String error = null;
                         try {
-                            fetched = OnlineNutritionLookup.lookupPerGrams(name, grams);
+                            fetched = OnlineNutritionLookup.lookupPerGrams(appCtx, name, grams);
                         } catch (Exception e) {
                             error = e.getMessage();
                         }

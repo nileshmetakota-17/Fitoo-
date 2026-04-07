@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Fitoo!!</string>
+    <!-- Single place for the user-visible app name: launcher label, main header, HTTP User-Agent. -->
+    <string name="app_name">Fitwise</string>
 
     <string-array name="meal_unit">
         <item>Count / pieces (e.g. 6 eggs)</item>
@@ -36,5 +37,12 @@
         <item>Legs</item>
         <item>Shoulders</item>
     </string-array>
+
+    <string name="steps_today_label">Steps today</string>
+    <string name="steps_hint">From device sensor</string>
+    <string name="steps_unavailable">Not available</string>
+    <string name="steps_tap_allow">Tap Allow to track steps from your phone.</string>
+    <string name="steps_permission_denied">Activity permission is off. Enable it in Settings to count steps.</string>
+    <string name="steps_enable">Allow</string>
 
 </resources>

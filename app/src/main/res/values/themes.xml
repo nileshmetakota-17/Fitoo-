@@ -1,11 +1,15 @@
 <resources>
 
-    <style name="Theme.Fitoo" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.Fitoo" parent="Theme.Material3.DayNight.NoActionBar">
 
-        <item name="colorPrimary">@color/naruto_orange</item>
-        <item name="colorSecondary">@color/chakra_blue</item>
+        <item name="android:windowBackground">@color/bg_screen</item>
+        <item name="android:navigationBarColor">@color/bg_screen</item>
+        <item name="android:statusBarColor">@color/bg_screen</item>
 
-        <!-- Make all text fields readable by default -->
+        <item name="colorPrimary">@color/text_primary</item>
+        <item name="colorOnPrimary">@color/bg_screen</item>
+        <item name="colorSecondary">@color/text_secondary</item>
+
         <item name="android:textColorPrimary">@color/text_primary</item>
         <item name="android:textColorSecondary">@color/text_secondary</item>
         <item name="android:textColorHint">@color/text_hint</item>

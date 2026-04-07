@@ -1,9 +1,19 @@
 package com.example.fitoo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +26,32 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SensorEventListener {
+
+    /** Daily goals for ring fill (steps / active minutes / move kcal estimates). */
+    private static final int ACTIVITY_STEP_GOAL = 10_000;
+    private static final int ACTIVITY_MIN_GOAL = 30;
+    private static final int ACTIVITY_KCAL_GOAL = 300;
+    /** Rough walking pace for minutes-from-steps estimate. */
+    private static final float STEPS_PER_ACTIVE_MINUTE = 110f;
+    private static final float KCAL_PER_STEP_ESTIMATE = 0.045f;
 
     private static final SeedExercise[] DEFAULT_EXERCISES = {
             new SeedExercise("Chest", "Barbell Bench Press", 4, 8),
@@ -78,10 +103,35 @@ public class HomeFragment extends Fragment {
     private Button btnRestartReports;
     private LinearLayout containerHomeWorkoutGroups;
     private Switch switchShowTodayWorkoutOnly;
+    private TextView txtStepsNumber;
+    private TextView txtActiveMinsValue;
+    private TextView txtMoveKcalValue;
+    private TextView txtStepsHint;
+    private Button btnStepsPermission;
+    private ActivityRingsView activityRings;
+
+    private SensorManager sensorManager;
+    private Sensor stepSensor;
+    private ActivityResultLauncher<String> requestStepsPermission;
 
     private FitooDatabase db;
     private final Map<String, Boolean> workoutSectionExpanded = new LinkedHashMap<>();
     private boolean showTodayWorkoutOnly = true;
+    /** Drops stale async results when {@link #loadTodayWorkoutPlan()} is called again. */
+    private final AtomicInteger todayWorkoutLoadGeneration = new AtomicInteger();
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestStepsPermission = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                granted -> {
+                    if (!isAdded()) {
+                        return;
+                    }
+                    refreshStepsAfterPermission(granted);
+                });
+    }
 
     @Nullable
     @Override
@@ -107,6 +157,12 @@ public class HomeFragment extends Fragment {
         homeWorkoutProgressBar = v.findViewById(R.id.homeWorkoutProgressBar);
         containerHomeWorkoutGroups = v.findViewById(R.id.containerHomeWorkoutGroups);
         switchShowTodayWorkoutOnly = v.findViewById(R.id.switchShowTodayWorkoutOnly);
+        txtStepsNumber = v.findViewById(R.id.txtStepsNumber);
+        txtActiveMinsValue = v.findViewById(R.id.txtActiveMinsValue);
+        txtMoveKcalValue = v.findViewById(R.id.txtMoveKcalValue);
+        txtStepsHint = v.findViewById(R.id.txtStepsHint);
+        btnStepsPermission = v.findViewById(R.id.btnStepsPermission);
+        activityRings = v.findViewById(R.id.activityRings);
         btnRestartReports = v.findViewById(R.id.btnRestartReports);
         Button btnSelectHomeWorkoutPlan = v.findViewById(R.id.btnSelectHomeWorkoutPlan);
         btnRestartReports.setOnClickListener(view -> showResetDialog());
@@ -117,8 +173,15 @@ public class HomeFragment extends Fragment {
             loadTodayWorkoutPlan();
         });
 
+        btnStepsPermission.setOnClickListener(view -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                requestStepsPermission.launch(Manifest.permission.ACTIVITY_RECOGNITION);
+            }
+        });
+
         loadDashboard();
         loadTodayWorkoutPlan();
+        tryRegisterStepsOrShowPermissionUi();
 
         return v;
     }
@@ -128,6 +191,13 @@ public class HomeFragment extends Fragment {
         super.onResume();
         loadDashboard();
         loadTodayWorkoutPlan();
+        tryRegisterStepsOrShowPermissionUi();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterStepSensor();
     }
 
     @Override
@@ -136,6 +206,134 @@ public class HomeFragment extends Fragment {
         if (!hidden) {
             loadDashboard();
             loadTodayWorkoutPlan();
+            tryRegisterStepsOrShowPermissionUi();
+        } else {
+            unregisterStepSensor();
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() != Sensor.TYPE_STEP_COUNTER || txtStepsNumber == null || getContext() == null) {
+            return;
+        }
+        long total = (long) event.values[0];
+        int steps = StepCounterHelper.todayStepsFromSensorTotal(requireContext(), total);
+        applyActivityMetrics(steps);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    private void refreshStepsAfterPermission(boolean granted) {
+        if (btnStepsPermission != null) {
+            btnStepsPermission.setVisibility(granted ? View.GONE : View.VISIBLE);
+        }
+        if (granted) {
+            if (txtStepsHint != null) {
+                txtStepsHint.setText(R.string.steps_hint);
+            }
+            tryRegisterStepSensor();
+        } else {
+            clearActivityMetricsUi(R.string.steps_permission_denied);
+        }
+    }
+
+    private boolean needsActivityRecognitionPermission() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
+    }
+
+    private boolean hasActivityRecognitionPermission() {
+        Context ctx = getContext();
+        if (ctx == null) {
+            return false;
+        }
+        if (!needsActivityRecognitionPermission()) {
+            return true;
+        }
+        return ContextCompat.checkSelfPermission(ctx, Manifest.permission.ACTIVITY_RECOGNITION)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void tryRegisterStepsOrShowPermissionUi() {
+        if (txtStepsNumber == null) {
+            return;
+        }
+        if (needsActivityRecognitionPermission() && !hasActivityRecognitionPermission()) {
+            btnStepsPermission.setVisibility(View.VISIBLE);
+            clearActivityMetricsUi(R.string.steps_tap_allow);
+            return;
+        }
+        btnStepsPermission.setVisibility(View.GONE);
+        txtStepsHint.setText(R.string.steps_hint);
+        tryRegisterStepSensor();
+    }
+
+    private void clearActivityMetricsUi(@StringRes int hintRes) {
+        txtStepsNumber.setText("—");
+        txtActiveMinsValue.setText("—");
+        txtMoveKcalValue.setText("—");
+        if (activityRings != null) {
+            activityRings.setProgress(0f, 0f, 0f);
+        }
+        txtStepsHint.setText(hintRes);
+    }
+
+    private void applyActivityMetrics(int steps) {
+        NumberFormat nf = NumberFormat.getIntegerInstance(Locale.US);
+        txtStepsNumber.setText(nf.format(Math.max(0, steps)));
+        int mins = Math.max(0, Math.round(steps / STEPS_PER_ACTIVE_MINUTE));
+        int kcal = Math.max(0, Math.round(steps * KCAL_PER_STEP_ESTIMATE));
+        txtActiveMinsValue.setText(String.valueOf(mins));
+        txtMoveKcalValue.setText(String.valueOf(kcal));
+        if (activityRings != null) {
+            float pSteps = Math.min(1f, steps / (float) ACTIVITY_STEP_GOAL);
+            float pMins = Math.min(1f, mins / (float) ACTIVITY_MIN_GOAL);
+            float pKcal = Math.min(1f, kcal / (float) ACTIVITY_KCAL_GOAL);
+            activityRings.setProgress(pSteps, pMins, pKcal);
+        }
+    }
+
+    private void tryRegisterStepSensor() {
+        Context ctx = getContext();
+        if (ctx == null || !isAdded()) {
+            return;
+        }
+        if (needsActivityRecognitionPermission() && !hasActivityRecognitionPermission()) {
+            return;
+        }
+        if (sensorManager == null) {
+            sensorManager = (SensorManager) ctx.getSystemService(Context.SENSOR_SERVICE);
+        }
+        if (sensorManager == null) {
+            txtStepsNumber.setText(R.string.steps_unavailable);
+            txtActiveMinsValue.setText("—");
+            txtMoveKcalValue.setText("—");
+            if (activityRings != null) {
+                activityRings.setProgress(0f, 0f, 0f);
+            }
+            return;
+        }
+        if (stepSensor == null) {
+            stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        }
+        if (stepSensor == null) {
+            txtStepsNumber.setText(R.string.steps_unavailable);
+            txtActiveMinsValue.setText("—");
+            txtMoveKcalValue.setText("—");
+            if (activityRings != null) {
+                activityRings.setProgress(0f, 0f, 0f);
+            }
+            return;
+        }
+        sensorManager.unregisterListener(this);
+        sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI, new Handler(Looper.getMainLooper()));
+    }
+
+    private void unregisterStepSensor() {
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(this);
         }
     }
 
@@ -266,6 +464,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadTodayWorkoutPlan() {
+        final int generation = todayWorkoutLoadGeneration.incrementAndGet();
         AppExecutors.get().io().execute(() -> {
             long today = startOfDay(System.currentTimeMillis());
             List<WorkoutLogEntry> todayEntries = db.workoutLogDao().getByDay(today);
@@ -284,13 +483,14 @@ public class HomeFragment extends Fragment {
                 return;
             }
             AppExecutors.get().main().execute(() -> {
-                if (!isAdded()) {
+                if (!isAdded() || generation != todayWorkoutLoadGeneration.get()) {
                     return;
                 }
                 if (!showTodayWorkoutOnly) {
                     txtHomeWorkoutProgressLabel.setText("Turn on the toggle to show today's workout.");
                     txtHomeWorkoutProgressLabel.setVisibility(View.VISIBLE);
                     homeWorkoutProgressBar.setVisibility(View.GONE);
+                    containerHomeWorkoutGroups.removeAllViews();
                     containerHomeWorkoutGroups.setVisibility(View.GONE);
                     return;
                 }
@@ -301,6 +501,25 @@ public class HomeFragment extends Fragment {
                 containerHomeWorkoutGroups.setVisibility(View.VISIBLE);
                 animateChakraProgress(homeWorkoutProgressBar, progress);
                 renderHomeWorkoutGroups(todayEntries);
+            });
+        });
+    }
+
+    /** Removes every exercise scheduled for today (empty plan). */
+    private void clearTodayWorkoutPlan() {
+        AppExecutors.get().io().execute(() -> {
+            long today = startOfDay(System.currentTimeMillis());
+            db.workoutLogDao().deleteByDay(today);
+            Activity activity = getActivity();
+            if (activity == null || !isAdded()) {
+                return;
+            }
+            AppExecutors.get().main().execute(() -> {
+                if (!isAdded()) {
+                    return;
+                }
+                Toast.makeText(getContext(), "Today's workout cleared.", Toast.LENGTH_SHORT).show();
+                loadTodayWorkoutPlan();
             });
         });
     }
@@ -344,8 +563,9 @@ public class HomeFragment extends Fragment {
                                     chosenCategories.add(catalogCategories.get(i));
                                 }
                             }
+                            dialog.dismiss();
                             if (chosenCategories.isEmpty()) {
-                                Toast.makeText(getContext(), "Select at least one category.", Toast.LENGTH_SHORT).show();
+                                clearTodayWorkoutPlan();
                                 return;
                             }
                             showSelectExercisesDialog(chosenCategories);
@@ -396,7 +616,7 @@ public class HomeFragment extends Fragment {
                 for (Map.Entry<String, List<SeedExercise>> section : groupedOptions.entrySet()) {
                     TextView heading = new TextView(requireContext());
                     heading.setText(section.getKey());
-                    heading.setTextColor(0xFFFFFFFF);
+                    heading.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary));
                     heading.setTextSize(17f);
                     heading.setPadding(0, root.getChildCount() == 0 ? 0 : dpToPx(10), 0, dpToPx(6));
                     root.addView(heading);
@@ -404,7 +624,7 @@ public class HomeFragment extends Fragment {
                     for (SeedExercise exercise : section.getValue()) {
                         CheckBox box = new CheckBox(requireContext());
                         box.setText(exercise.name + " (" + describeSeedExercise(exercise) + ")");
-                        box.setTextColor(0xFFFFFFFF);
+                        box.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary));
                         box.setChecked(selectedKeys.contains(exercise.category + "|" + exercise.name));
                         root.addView(box);
                         checkBoxes.add(box);
@@ -425,11 +645,11 @@ public class HomeFragment extends Fragment {
                             chosenExercises.add(exerciseOrder.get(i));
                         }
                     }
+                    dialog.dismiss();
                     if (chosenExercises.isEmpty()) {
-                        Toast.makeText(getContext(), "Select at least one exercise.", Toast.LENGTH_SHORT).show();
+                        clearTodayWorkoutPlan();
                         return;
                     }
-                    dialog.dismiss();
                     applyTodayPlan(chosenExercises);
                 }));
                 dialog.show();
@@ -471,7 +691,7 @@ public class HomeFragment extends Fragment {
         if (todayEntries.isEmpty()) {
             TextView empty = new TextView(getContext());
             empty.setText("No workout selected for today yet.");
-            empty.setTextColor(0xCCFFFFFF);
+            empty.setTextColor(ContextCompat.getColor(getContext(), R.color.text_secondary));
             empty.setTextSize(14f);
             containerHomeWorkoutGroups.addView(empty);
             return;

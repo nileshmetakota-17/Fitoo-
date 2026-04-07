@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
@@ -416,7 +417,7 @@ public class WorkoutsFragment extends Fragment {
         if (recentDays == null || recentDays.isEmpty()) {
             TextView empty = new TextView(getContext());
             empty.setText("No workout history yet.");
-            empty.setTextColor(0xCCFFFFFF);
+            empty.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
             containerHistory.addView(empty);
             return;
         }
@@ -429,9 +430,9 @@ public class WorkoutsFragment extends Fragment {
             TextView t1 = row.findViewById(android.R.id.text1);
             TextView t2 = row.findViewById(android.R.id.text2);
             t1.setText(sdf.format(day));
-            t1.setTextColor(0xFFFFFFFF);
+            t1.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary));
             t2.setText(count + " exercise(s)");
-            t2.setTextColor(0xCCFFFFFF);
+            t2.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
             containerHistory.addView(row);
         }
     }
@@ -472,7 +473,7 @@ public class WorkoutsFragment extends Fragment {
 
                     TextView label = new TextView(context);
                     label.setText(group);
-                    label.setTextColor(0xFFFFFFFF);
+                    label.setTextColor(ContextCompat.getColor(context, R.color.text_primary));
                     label.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
 
                     Button remove = new Button(context);

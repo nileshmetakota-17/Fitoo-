@@ -10,13 +10,13 @@
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"
         android:text="Drag to move. Pinch to zoom."
-        android:textColor="#CCFFFFFF"
+        android:textColor="@color/text_secondary"
         android:textSize="13sp" />
 
     <com.example.fitoo.CircleCropImageView
         android:id="@+id/cropImageView"
         android:layout_width="match_parent"
         android:layout_height="320dp"
-        android:background="#22000000" />
+        android:background="@color/progress_track" />
 
 </LinearLayout>

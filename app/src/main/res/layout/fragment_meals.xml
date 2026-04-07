@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:background="@color/bg_screen">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Meal Planner"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text_primary"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Track nutrition by category"
-            android:textColor="#CCFFFFFF"
+            android:textColor="@color/text_secondary"
             android:textSize="13sp"
             android:layout_marginTop="4dp" />
 
@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Daily Totals"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="Calories: 0 kcal"
-                android:textColor="#CCFFFFFF"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
             <TextView
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Protein: 0 g"
-                android:textColor="#CCFFFFFF"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
             <TextView
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Carbs: 0 g"
-                android:textColor="#CCFFFFFF"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
             <TextView
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fats: 0 g"
-                android:textColor="#CCFFFFFF"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
             <TextView
@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fiber: 0 g"
-                android:textColor="#CCFFFFFF"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp" />
 
             <TextView
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="Meals eaten: 0/0"
-                android:textColor="#B3FFFFFF"
+                android:textColor="@color/text_tertiary"
                 android:textSize="12sp" />
 
             <ProgressBar
@@ -116,7 +116,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sort:"
-                android:textColor="#CCFFFFFF"
+                android:textColor="@color/text_secondary"
                 android:textSize="13sp" />
 
             <Spinner
@@ -146,7 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="My Diet Plan"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -154,7 +154,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fixed diet plan"
-                android:textColor="#CCFFFFFF"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 android:layout_marginTop="2dp" />
 

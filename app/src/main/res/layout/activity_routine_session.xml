@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/naruto_bg">
+    android:background="@color/bg_screen">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Complete Routine"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Challenges: 0/0"
-            android:textColor="#CCFFFFFF"
+            android:textColor="@color/text_secondary"
             android:textSize="14sp"
             android:layout_marginTop="4dp" />
     </LinearLayout>

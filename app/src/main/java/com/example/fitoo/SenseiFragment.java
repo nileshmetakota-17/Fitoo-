@@ -14,16 +14,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
@@ -42,8 +41,6 @@ public class SenseiFragment extends Fragment {
     private static final int MAX_MESSAGES = 16;
     private static final int MAX_SESSIONS = 30;
     private static final long MIN_REPLY_DELAY_MS = 700L;
-    private static final int COMPOSER_GAP_DP = 8;
-    private static final int COMPOSER_EXTRA_LIFT_DP = 12;
     private static final String WELCOME_TEXT =
             "Ask me about workouts, nutrition, diet, or fitness. Live AI works without API key here.";
     private static final String KEY_CHAT_SESSIONS = "sensei_chat_sessions_v2";
@@ -51,7 +48,7 @@ public class SenseiFragment extends Fragment {
 
     private LinearLayout senseiMessages;
     private EditText senseiInput;
-    private ScrollView senseiScroll;
+    private NestedScrollView senseiScroll;
     private Button sendBtn;
     private Button btnHistory;
     private Button btnNewChat;
@@ -64,7 +61,6 @@ public class SenseiFragment extends Fragment {
     private final List<ChatSession> chatSessions = new ArrayList<>();
     private volatile boolean awaitingReply;
     private String activeChatId;
-    private int lastImeOffsetPx;
 
     // Undo snapshots for Sensei-applied changes
     private List<DietPlanItem> lastDietPlanSnapshot;
@@ -120,40 +116,19 @@ public class SenseiFragment extends Fragment {
     }
 
     private void setupImeAwareComposer(@NonNull View root) {
-        final View composer = root.findViewById(R.id.senseiComposerContainer);
-        if (composer == null) {
-            return;
-        }
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
-            Insets imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime());
-            Insets navInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
-            int imeOffset = Math.max(0, imeInsets.bottom - navInsets.bottom);
-            View bottomNav = getActivity() != null ? getActivity().findViewById(R.id.bottomNav) : null;
-            int appBottomNavHeight = bottomNav != null ? bottomNav.getHeight() : 0;
-            int desiredLift = Math.max(0, imeOffset - appBottomNavHeight);
-            if (desiredLift > 0) {
-                desiredLift = Math.max(0, desiredLift - dpToPx(COMPOSER_GAP_DP));
-                desiredLift += dpToPx(COMPOSER_EXTRA_LIFT_DP);
-            }
-            composer.setTranslationY(-desiredLift);
-            lastImeOffsetPx = desiredLift;
-
-            // Ensure chat content never goes under the composer/IME.
             if (senseiScroll != null) {
-                int basePadding = dpToPx(8);
-                // Keep this tight: only offset by the IME lift, not by the composer height.
-                int extra = Math.max(0, desiredLift) + dpToPx(6);
-                senseiScroll.setPadding(
-                        senseiScroll.getPaddingLeft(),
-                        senseiScroll.getPaddingTop(),
-                        senseiScroll.getPaddingRight(),
-                        basePadding + Math.max(0, extra)
-                );
-                // Keep the latest message visible while typing.
                 senseiScroll.post(this::scrollToBottom);
             }
             return insets;
         });
+        if (senseiInput != null) {
+            senseiInput.setOnFocusChangeListener((v, hasFocus) -> {
+                if (hasFocus && senseiScroll != null) {
+                    senseiScroll.post(this::scrollToBottom);
+                }
+            });
+        }
         ViewCompat.requestApplyInsets(root);
     }
 
@@ -806,6 +781,11 @@ public class SenseiFragment extends Fragment {
         LinearLayout actions = row.findViewById(R.id.msgActions);
         msgLabel.setText(label);
         msgText.setText(text);
+        if ("You".equals(label)) {
+            msgText.setBackgroundResource(R.drawable.sensei_message_user_bubble);
+        } else {
+            msgText.setBackgroundResource(R.drawable.sensei_message_card);
+        }
         if ("Sensei".equals(label) && actions != null) {
             bindSenseiActions(actions, text);
         }
@@ -814,11 +794,18 @@ public class SenseiFragment extends Fragment {
     }
 
     private void scrollToBottom() {
-        if (senseiScroll == null || senseiMessages == null) {
+        if (senseiScroll == null) {
             return;
         }
-        int target = Math.max(0, senseiMessages.getBottom() + dpToPx(16));
-        senseiScroll.smoothScrollTo(0, target);
+        senseiScroll.post(() -> {
+            View content = senseiScroll.getChildAt(0);
+            if (content == null) {
+                return;
+            }
+            int scrollRange = content.getHeight() - senseiScroll.getHeight();
+            int y = Math.max(0, scrollRange);
+            senseiScroll.smoothScrollTo(0, y);
+        });
     }
 
     private void bindSenseiActions(@NonNull LinearLayout actions, @NonNull String assistantText) {

@@ -117,6 +117,39 @@ public class NutritionLookup {
             info.fiber = 0f;
             return info;
         }
+        if (n.contains("carrot") || n.contains("carrots")) {
+            // USDA raw carrots, per 100g
+            info.calories = 41 * factor;
+            info.protein = 0.9f * factor;
+            info.carbs = 9.6f * factor;
+            info.fats = 0.2f * factor;
+            info.fiber = 2.8f * factor;
+            return info;
+        }
+        if (n.contains("tomato") || n.contains("tomatoes")) {
+            info.calories = 18 * factor;
+            info.protein = 0.9f * factor;
+            info.carbs = 3.9f * factor;
+            info.fats = 0.2f * factor;
+            info.fiber = 1.2f * factor;
+            return info;
+        }
+        if (n.contains("onion") || n.contains("onions")) {
+            info.calories = 40 * factor;
+            info.protein = 1.1f * factor;
+            info.carbs = 9.3f * factor;
+            info.fats = 0.1f * factor;
+            info.fiber = 1.7f * factor;
+            return info;
+        }
+        if (n.contains("cucumber") || n.contains("cucumbers")) {
+            info.calories = 15 * factor;
+            info.protein = 0.7f * factor;
+            info.carbs = 3.6f * factor;
+            info.fats = 0.1f * factor;
+            info.fiber = 0.5f * factor;
+            return info;
+        }
         if (n.contains("potato") || n.contains("potatoes")) {
             info.calories = 87 * factor;
             info.protein = 1.9f * factor;
@@ -125,7 +158,7 @@ public class NutritionLookup {
             info.fiber = 2.2f * factor;
             return info;
         }
-        if (n.contains("broccoli") || n.contains("vegetable")) {
+        if (n.contains("broccoli")) {
             info.calories = 35 * factor;
             info.protein = 2.4f * factor;
             info.carbs = 7 * factor;
@@ -139,6 +172,47 @@ public class NutritionLookup {
             info.carbs = 25 * factor;
             info.fats = 1.1f * factor;
             info.fiber = 1.8f * factor;
+            return info;
+        }
+        if (n.contains("paneer") || (n.contains("cottage") && n.contains("cheese"))) {
+            // Indian paneer (approx. per 100g)
+            info.calories = 265 * factor;
+            info.protein = 18.3f * factor;
+            info.carbs = 1.2f * factor;
+            info.fats = 20.8f * factor;
+            info.fiber = 0f;
+            return info;
+        }
+        if (n.contains("ghee") || n.contains("clarified butter")) {
+            info.calories = 900 * factor;
+            info.protein = 0f;
+            info.carbs = 0f;
+            info.fats = 100f * factor;
+            info.fiber = 0f;
+            return info;
+        }
+        if (n.contains("roti") || n.contains("chapati") || n.contains("phulka")) {
+            info.calories = 297 * factor;
+            info.protein = 11f * factor;
+            info.carbs = 46f * factor;
+            info.fats = 7.5f * factor;
+            info.fiber = 4.9f * factor;
+            return info;
+        }
+        if (n.contains("dal") || n.contains("daal") || n.contains("lentil")) {
+            info.calories = 116 * factor;
+            info.protein = 9f * factor;
+            info.carbs = 20f * factor;
+            info.fats = 0.4f * factor;
+            info.fiber = 7.9f * factor;
+            return info;
+        }
+        if (n.contains("dahi") || n.contains("curd") || n.contains("yogurt")) {
+            info.calories = 61 * factor;
+            info.protein = 3.2f * factor;
+            info.carbs = 4.8f * factor;
+            info.fats = 3.3f * factor;
+            info.fiber = 0f;
             return info;
         }
         if (n.contains("cheese")) {

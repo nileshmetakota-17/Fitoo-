@@ -1,91 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_meal_scroll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:fillViewport="false"
+    android:fadeScrollbars="false"
+    android:scrollbars="vertical">
 
-    <EditText
-        android:id="@+id/dialog_meal_name"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Food name"
-        android:inputType="text" />
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <EditText
-        android:id="@+id/dialog_meal_quantity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:hint="Amount (e.g. 6 or 250)"
-        android:inputType="numberDecimal" />
+        <EditText
+            android:id="@+id/dialog_meal_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Food name"
+            android:inputType="text" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Unit"
-        android:textColor="#CCFFFFFF"
-        android:textSize="12sp" />
+        <EditText
+            android:id="@+id/dialog_meal_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Amount (e.g. 6 or 250)"
+            android:inputType="numberDecimal" />
 
-    <Spinner
-        android:id="@+id/dialog_meal_unit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Unit"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
 
-    <Spinner
-        android:id="@+id/dialog_meal_category"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" />
+        <Spinner
+            android:id="@+id/dialog_meal_unit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Optional macro override"
-        android:textColor="#CCFFFFFF"
-        android:textSize="12sp" />
+        <Spinner
+            android:id="@+id/dialog_meal_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
 
-    <EditText
-        android:id="@+id/dialog_meal_calories"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:hint="Calories (kcal)"
-        android:inputType="numberDecimal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Optional macro override"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
 
-    <EditText
-        android:id="@+id/dialog_meal_protein"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Protein (g)"
-        android:inputType="numberDecimal" />
+        <EditText
+            android:id="@+id/dialog_meal_calories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:hint="Calories (kcal)"
+            android:inputType="numberDecimal" />
 
-    <EditText
-        android:id="@+id/dialog_meal_carbs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Carbs (g)"
-        android:inputType="numberDecimal" />
+        <EditText
+            android:id="@+id/dialog_meal_protein"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Protein (g)"
+            android:inputType="numberDecimal" />
 
-    <EditText
-        android:id="@+id/dialog_meal_fats"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Fats (g)"
-        android:inputType="numberDecimal" />
+        <EditText
+            android:id="@+id/dialog_meal_carbs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Carbs (g)"
+            android:inputType="numberDecimal" />
 
-    <EditText
-        android:id="@+id/dialog_meal_fiber"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="Fiber (g)"
-        android:inputType="numberDecimal" />
+        <EditText
+            android:id="@+id/dialog_meal_fats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Fats (g)"
+            android:inputType="numberDecimal" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/dialog_meal_fiber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Fiber (g)"
+            android:inputType="numberDecimal" />
+
+    </LinearLayout>
+
+</ScrollView>

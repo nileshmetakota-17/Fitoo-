@@ -1,115 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Composer is OUTSIDE the scroll area so it stays above the keyboard (not inside scroll content). -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/background">
+    android:background="@color/bg_screen"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:text="Sensei"
-        android:textColor="@android:color/white"
-        android:textSize="22sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="4dp"
-        android:text="Workout, nutrition &amp; fitness advice"
-        android:textColor="#CCFFFFFF"
-        android:textSize="13sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Model"
-            android:textColor="#CCFFFFFF"
-            android:textSize="12sp" />
-
-        <Spinner
-            android:id="@+id/senseiModelSpinner"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/profile_stat_card" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        android:weightSum="3">
-
-        <Button
-            android:id="@+id/btnSenseiHistory"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="History"
-            android:textAllCaps="false" />
-
-        <Button
-            android:id="@+id/btnSenseiNewChat"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:text="New chat"
-            android:textAllCaps="false" />
-
-        <Button
-            android:id="@+id/btnSenseiClearHistory"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:text="Delete history"
-            android:textAllCaps="false" />
-    </LinearLayout>
-
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/senseiScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:fillViewport="true"
-        android:layout_marginTop="16dp">
+        android:clipToPadding="false"
+        android:fillViewport="false"
+        android:scrollbars="vertical">
 
         <LinearLayout
-            android:id="@+id/senseiMessages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:paddingBottom="8dp" />
+            android:orientation="vertical">
 
-    </ScrollView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:text="Sensei"
+                android:textColor="@color/text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="4dp"
+                android:text="Workout, nutrition &amp; fitness advice"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Model"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
+
+                <Spinner
+                    android:id="@+id/senseiModelSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/profile_stat_card" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <Button
+                    android:id="@+id/btnSenseiHistory"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="History"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/btnSenseiNewChat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="New chat"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/btnSenseiClearHistory"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="Delete history"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/senseiMessages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="8dp" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/senseiComposerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/surface"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:padding="16dp">
 
         <EditText
             android:id="@+id/senseiInput"
@@ -118,11 +130,13 @@
             android:layout_weight="1"
             android:minHeight="48dp"
             android:hint="Ask about workouts, diet..."
-            android:textColor="@android:color/white"
-            android:textColorHint="#80FFFFFF"
-            android:background="@drawable/profile_stat_card"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"
+            android:textColorHighlight="@color/text_select_highlight"
+            android:background="@drawable/composer_field_bg"
             android:padding="15dp"
-            android:inputType="text"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="6"
             android:imeOptions="actionSend" />
 
         <Button

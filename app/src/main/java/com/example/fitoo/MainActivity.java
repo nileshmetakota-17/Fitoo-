@@ -1,14 +1,16 @@
 package com.example.fitoo;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -23,27 +25,19 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_SENSEI = "sensei";
     private static final String TAG_SETTINGS = "settings";
 
-    VideoView video;
-    ImageView rasengan;
     BottomNavigationView bottomNav;
     String currentTag = TAG_HOME;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Do not rely on resize alone (often fails with bottom nav): pad nav host by IME inset instead.
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         setContentView(R.layout.activity_main);
-
-        video = findViewById(R.id.videoBG);
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.chakra_video);
-        video.setVideoURI(uri);
-        video.start();
-        video.setOnCompletionListener(mp -> video.start());
-
-        rasengan = findViewById(R.id.rasengan);
-        startRasenganAnimation();
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
 
         bottomNav = findViewById(R.id.bottomNav);
+        setupKeyboardInsetsForNavHost();
 
         if (savedInstanceState == null) {
             FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
@@ -119,27 +113,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (video != null && !video.isPlaying()) {
-            video.start();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (video != null && video.isPlaying()) {
-            video.pause();
-        }
-    }
-
-    private void startRasenganAnimation() {
-        rasengan.animate()
-                .rotationBy(720)
-                .setDuration(2000)
-                .withEndAction(this::startRasenganAnimation)
-                .start();
+    /**
+     * Pads the fragment area above the IME so Sensei (and other tabs) never draw the composer under the keyboard.
+     * Hides bottom nav while the keyboard is open.
+     */
+    private void setupKeyboardInsetsForNavHost() {
+        View mainRoot = findViewById(R.id.mainRoot);
+        View navHost = findViewById(R.id.nav_host_container);
+        ViewCompat.setOnApplyWindowInsetsListener(mainRoot, (v, insets) -> {
+            Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
+            int imeBottom = ime.bottom;
+            bottomNav.setVisibility(imeBottom > 0 ? View.GONE : View.VISIBLE);
+            navHost.setPadding(0, 0, 0, imeBottom);
+            return insets;
+        });
+        ViewCompat.requestApplyInsets(mainRoot);
     }
 }

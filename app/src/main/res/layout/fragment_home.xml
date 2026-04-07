@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@color/bg_screen"
     android:fillViewport="true">
 
     <LinearLayout
@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Your Daily Training"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text_primary"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -26,9 +26,191 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Smarter eating, stronger chakra."
-            android:textColor="#CCFFFFFF"
+            android:textColor="@color/text_secondary"
             android:textSize="13sp"
             android:layout_marginTop="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/activity_steps_card_bg"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/activity_icon_circle_green">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="👟"
+                                android:textSize="18sp" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/txtStepsNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="—"
+                                android:textColor="@color/activity_card_text_primary"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" steps"
+                                android:textColor="@color/activity_card_text_muted"
+                                android:textSize="17sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/activity_icon_circle_blue">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="🕐"
+                                android:textSize="18sp" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/txtActiveMinsValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="—"
+                                android:textColor="@color/activity_card_text_primary"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" mins"
+                                android:textColor="@color/activity_card_text_muted"
+                                android:textSize="17sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/activity_icon_circle_pink">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="🔥"
+                                android:textSize="18sp" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/txtMoveKcalValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="—"
+                                android:textColor="@color/activity_card_text_primary"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" kcal"
+                                android:textColor="@color/activity_card_text_muted"
+                                android:textSize="17sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <com.example.fitoo.ActivityRingsView
+                    android:id="@+id/activityRings"
+                    android:layout_width="132dp"
+                    android:layout_height="132dp"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@string/steps_today_label" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtStepsHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/steps_hint"
+                android:textColor="@color/activity_card_text_muted"
+                android:textSize="11sp" />
+
+            <Button
+                android:id="@+id/btnStepsPermission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/steps_enable"
+                android:textAllCaps="false"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <!-- Main calorie card -->
         <LinearLayout
@@ -51,7 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Calories"
-                    android:textColor="#B3FFFFFF"
+                    android:textColor="@color/text_tertiary"
                     android:textSize="13sp" />
 
                 <TextView
@@ -59,7 +241,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="32sp"
                     android:textStyle="bold"
                     android:layout_marginTop="4dp" />
@@ -69,7 +251,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="of 2000 kcal target"
-                    android:textColor="#CCFFFFFF"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp"
                     android:layout_marginTop="2dp" />
 
@@ -97,7 +279,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Macros today"
-                    android:textColor="#B3FFFFFF"
+                    android:textColor="@color/text_tertiary"
                     android:textSize="13sp" />
 
                 <TextView
@@ -105,7 +287,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Protein: 0 g"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="13sp"
                     android:layout_marginTop="6dp" />
 
@@ -114,7 +296,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Carbs: 0 g"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="13sp"
                     android:layout_marginTop="2dp" />
 
@@ -123,7 +305,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Fats: 0 g"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="13sp"
                     android:layout_marginTop="2dp" />
 
@@ -132,7 +314,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Fiber: 0 g"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="13sp"
                     android:layout_marginTop="2dp" />
 
@@ -141,7 +323,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0 meals logged"
-                    android:textColor="#CCFFFFFF"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp"
                     android:layout_marginTop="8dp" />
             </LinearLayout>
@@ -168,7 +350,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Weekly kcal"
-                    android:textColor="#B3FFFFFF"
+                    android:textColor="@color/text_tertiary"
                     android:textSize="11sp" />
 
                 <TextView
@@ -176,7 +358,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -195,7 +377,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Monthly kcal"
-                    android:textColor="#B3FFFFFF"
+                    android:textColor="@color/text_tertiary"
                     android:textSize="11sp" />
 
                 <TextView
@@ -203,7 +385,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -221,7 +403,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3-Month kcal"
-                    android:textColor="#B3FFFFFF"
+                    android:textColor="@color/text_tertiary"
                     android:textSize="11sp" />
 
                 <TextView
@@ -229,7 +411,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="0"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -247,7 +429,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Today's Workout"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -256,7 +438,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Choose categories and exercises for today, then fill chakra as you complete them."
-                android:textColor="#CCFFFFFF"
+                android:textColor="@color/text_secondary"
                 android:textSize="13sp" />
 
             <Button
@@ -274,7 +456,7 @@
                 android:layout_marginTop="10dp"
                 android:checked="true"
                 android:text="Show workouts"
-                android:textColor="@android:color/white" />
+                android:textColor="@color/text_primary" />
 
             <TextView
                 android:id="@+id/txtHomeWorkoutProgressLabel"
@@ -282,7 +464,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:text="Today's plan: 0/0"
-                android:textColor="@android:color/white"
+                android:textColor="@color/text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 

@@ -9,7 +9,7 @@
         android:id="@+id/msgLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#FFD9D9D9"
+        android:textColor="@color/text_tertiary"
         android:textSize="11sp" />
 
     <TextView
@@ -22,7 +22,7 @@
         android:hyphenationFrequency="none"
         android:lineSpacingExtra="2dp"
         android:padding="12dp"
-        android:textColor="#F5F5F5"
+        android:textColor="@color/text_primary"
         android:textSize="14sp" />
 
     <LinearLayout
