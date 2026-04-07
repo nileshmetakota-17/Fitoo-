@@ -1,6 +1,6 @@
 <resources>
     <!-- Single place for the user-visible app name: launcher label, main header, HTTP User-Agent. -->
-    <string name="app_name">Fitwise</string>
+    <string name="app_name">Fitoo!!</string>
 
     <string-array name="meal_unit">
         <item>Count / pieces (e.g. 6 eggs)</item>
